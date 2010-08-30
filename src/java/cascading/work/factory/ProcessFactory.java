@@ -25,9 +25,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import cascading.work.Resource;
 import cascading.work.Schema;
@@ -146,6 +148,22 @@ public abstract class ProcessFactory<P, R extends Resource>
     return resourceList;
     }
 
+  /**
+   * Method getAllSourceResources returns a Collection of all Resources instances add via
+   * {@link #addSourceResource(String, cascading.work.Resource[])}.
+   *
+   * @return Collection of Resource instances
+   */
+  public Collection<R> getAllSourceResources()
+    {
+    Set<R> set = new HashSet<R>();
+
+    for( List<R> resources : sourceResources.values() )
+      set.addAll( resources );
+
+    return set;
+    }
+
   /** Method clearSourceResources removes all bindings for all names. */
   protected void clearSourceResources()
     {
@@ -153,7 +171,6 @@ public abstract class ProcessFactory<P, R extends Resource>
     }
 
   /**
-   * /**
    * Method addSinkResource binds a name to the given resources.
    * <p/>
    * This method may be called repeatedly with the same sinkName, all given
@@ -178,7 +195,6 @@ public abstract class ProcessFactory<P, R extends Resource>
     }
 
   /**
-   * /**
    * Method getSinkResources returns a List of resources associated with the given name.
    *
    * @param sinkName
@@ -195,6 +211,22 @@ public abstract class ProcessFactory<P, R extends Resource>
       }
 
     return resourceList;
+    }
+
+  /**
+   * Method getAllSinkResources returns a Collection of all Resources instances add via
+   * {@link #addSinkResource(String, cascading.work.Resource[])}.
+   *
+   * @return Collection of Resource instances
+   */
+  public Collection<R> getAllSinkResources()
+    {
+    Set<R> set = new HashSet<R>();
+
+    for( List<R> resources : sinkResources.values() )
+      set.addAll( resources );
+
+    return set;
     }
 
   /** Method clearSinkResources removes all bindings for all names. */
