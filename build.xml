@@ -65,7 +65,7 @@
       <include name="*.jar"/>
     </fileset>
 
-    <fileset dir="${lib.dir}">
+    <fileset dir="${lib.dir}" erroronmissingdir="false">
       <include name="*.jar"/>
     </fileset>
 
@@ -97,7 +97,6 @@
     <echo message="building..."/>
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.test}"/>
-    <mkdir dir="${lib.dir}"/>
 
     <javac srcdir="${src.dir}" destdir="${build.classes}" verbose="off" debug="${javac.debug}"
            includeantruntime="false">
@@ -124,7 +123,7 @@
 
   <target name="jar" depends="build" description="creates module jar">
 
-    <jar jarfile="${build.dir}/${ant.project.name}-${cascading.memcached.version}.jar">
+    <jar jarfile="${build.dir}/${ant.project.name}-${cascading.work.version}.jar">
       <fileset dir="${build.classes}"/>
     </jar>
 

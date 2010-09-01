@@ -205,7 +205,7 @@ public abstract class FlowFactory extends ProcessFactory<Flow, TapResource>
    */
   protected FlowConnector getFlowConnector()
     {
-    return new FlowConnector( properties );
+    return new FlowConnector( getProperties() );
     }
 
   /**

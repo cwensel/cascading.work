@@ -31,42 +31,32 @@ import cascading.work.factory.FlowFactory;
  * A mock FlowFactory that creates a working Flow for conversion of data between
  * two formats and across multiple protocols.
  */
-public class CSVToTSVFactory extends FlowFactory
+public class CopyFactory extends FlowFactory
   {
   private String name;
 
-  public CSVToTSVFactory( String name, Schema schema )
+  public CopyFactory( String name )
     {
-    this( null, name, schema );
+    this( null, name );
     }
 
-  public CSVToTSVFactory( Properties properties, String name, Schema schema )
+  public CopyFactory( Properties properties, String name )
     {
     super( properties );
     this.name = name;
 
-    setSourceSchema( name, schema );
-    setSinkSchema( name, schema );
+    setSourceSchema( name, new CopySchema() );
+    setSinkSchema( name, new CopySchema() );
     }
 
-  public void setSource( String path )
+  public void addSourceResource( TapResource resource )
     {
-    setSource( (Protocol) getSourceSchema( name ).getDefaultProtocol(), path );
+    addSourceResource( name, resource );
     }
 
-  public void setSource( Protocol protocol, String path )
+  public void addSinkResource( TapResource resource )
     {
-    addSourceResource( name, new ConversionResource( path, protocol, Format.CSV ) );
-    }
-
-  public void setSink( String path )
-    {
-    setSink( (Protocol) getSinkSchema( name ).getDefaultProtocol(), path );
-    }
-
-  public void setSink( Protocol protocol, String path )
-    {
-    addSinkResource( name, new ConversionResource( path, protocol, Format.TSV ) );
+    addSinkResource( name, resource );
     }
 
   @Override

@@ -33,6 +33,7 @@ import java.util.Set;
 
 import cascading.work.Resource;
 import cascading.work.Schema;
+import cascading.work.TapResource;
 
 /**
  * Class ProcessFactory is an abstract base class for creating process based factories. Where a 'process'
@@ -42,31 +43,20 @@ import cascading.work.Schema;
  * @param <R> a resource type sub-classing {@link Resource}
  * @see FlowFactory
  */
-public abstract class ProcessFactory<P, R extends Resource>
+public abstract class ProcessFactory<P, R extends TapResource> extends Factory<P>
   {
-  protected Properties properties;
   Map<String, Schema> sourceSchemas = new HashMap<String, Schema>();
   Map<String, Schema> sinkSchemas = new HashMap<String, Schema>();
   Map<String, List<R>> sourceResources = new HashMap<String, List<R>>();
   Map<String, List<R>> sinkResources = new HashMap<String, List<R>>();
 
-  protected ProcessFactory()
-    {
-    }
-
   protected ProcessFactory( Properties properties )
     {
-    this.properties = properties;
+    super( properties );
     }
 
-  public void setProperties( Properties properties )
+  public ProcessFactory()
     {
-    this.properties = properties;
-    }
-
-  public Properties getProperties()
-    {
-    return properties;
     }
 
   /**
@@ -150,7 +140,7 @@ public abstract class ProcessFactory<P, R extends Resource>
 
   /**
    * Method getAllSourceResources returns a Collection of all Resources instances add via
-   * {@link #addSourceResource(String, cascading.work.Resource[])}.
+   * {@link #addSourceResource(String, cascading.work.TapResource[])}.
    *
    * @return Collection of Resource instances
    */
@@ -162,6 +152,11 @@ public abstract class ProcessFactory<P, R extends Resource>
       set.addAll( resources );
 
     return set;
+    }
+
+  public boolean replaceSourceResource( R from, R to )
+    {
+    return replaceResourceIn( from, to, sourceResources );
     }
 
   /** Method clearSourceResources removes all bindings for all names. */
@@ -215,7 +210,7 @@ public abstract class ProcessFactory<P, R extends Resource>
 
   /**
    * Method getAllSinkResources returns a Collection of all Resources instances add via
-   * {@link #addSinkResource(String, cascading.work.Resource[])}.
+   * {@link #addSinkResource(String, cascading.work.TapResource[])}.
    *
    * @return Collection of Resource instances
    */
@@ -229,10 +224,33 @@ public abstract class ProcessFactory<P, R extends Resource>
     return set;
     }
 
+  public boolean replaceSinkResource( R from, R to )
+    {
+    return replaceResourceIn( from, to, sinkResources );
+    }
+
   /** Method clearSinkResources removes all bindings for all names. */
   protected void clearSinkResources()
     {
     sinkResources.clear();
+    }
+
+  private boolean replaceResourceIn( R from, R to, Map<String, List<R>> resourceMap )
+    {
+    boolean found = false;
+
+    for( String name : resourceMap.keySet() )
+      {
+      List<R> resources = resourceMap.get( name );
+      int index = resources.indexOf( from );
+
+      if( index != -1 )
+        resources.set( index, to );
+
+      found = found || index != -1;
+      }
+
+    return found;
     }
 
   protected Collection<String> getSourceNames()
@@ -245,10 +263,4 @@ public abstract class ProcessFactory<P, R extends Resource>
     return sinkResources.keySet();
     }
 
-  /**
-   * Method create returns a new instance of the type this factory creates.
-   *
-   * @return
-   */
-  public abstract P create();
   }
