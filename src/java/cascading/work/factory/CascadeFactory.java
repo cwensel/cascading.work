@@ -73,6 +73,12 @@ public class CascadeFactory<R extends TapResource> extends Factory<Cascade>
     return name;
     }
 
+  public void addAllProcessFactories( Collection<ProcessFactory<?, R>> processFactories )
+    {
+    for( ProcessFactory<?, R> processFactory : processFactories )
+      addProcessFactory( processFactory );
+    }
+
   public void addProcessFactory( ProcessFactory<?, R> processFactory )
     {
     if( processFactories.contains( processFactory ) )
@@ -162,6 +168,9 @@ public class CascadeFactory<R extends TapResource> extends Factory<Cascade>
       else
         throw new IllegalStateException( "process type not supported: " + o.getClass().getName() + ", returned by: " + processFactory );
       }
+
+    if( flows.isEmpty() )
+      throw new IllegalStateException( "now flows were created from the given process factories" );
 
     return getCascadeConnector().connect( name, flows );
     }
