@@ -34,16 +34,23 @@ import cascading.work.factory.FlowFactory;
 public class CSVToTSVFactory extends FlowFactory
   {
   private String name;
+  private boolean hasHeaders;
 
   public CSVToTSVFactory( String name, Schema schema )
     {
-    this( null, name, schema );
+    this( name, schema, false );
     }
 
-  public CSVToTSVFactory( Properties properties, String name, Schema schema )
+  public CSVToTSVFactory( String name, Schema schema, boolean hasHeaders )
+    {
+    this( null, name, schema, hasHeaders );
+    }
+
+  public CSVToTSVFactory( Properties properties, String name, Schema schema, boolean hasHeaders )
     {
     super( properties );
     this.name = name;
+    this.hasHeaders = hasHeaders;
 
     setSourceSchema( name, schema );
     setSinkSchema( name, schema );
@@ -56,7 +63,7 @@ public class CSVToTSVFactory extends FlowFactory
 
   public void setSource( Protocol protocol, String path )
     {
-    addSourceResource( name, new ConversionResource( path, protocol, Format.CSV ) );
+    addSourceResource( name, new ConversionResource( path, protocol, hasHeaders ? Format.CSV_HEADERS : Format.CSV ) );
     }
 
   public void setSink( String path )

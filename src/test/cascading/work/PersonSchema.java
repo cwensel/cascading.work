@@ -40,12 +40,13 @@ public class PersonSchema extends Schema<Protocol, Format>
 
   public static final Fields FIELDS = FIRST.append( LAST ).append( ADDRESS );
 
-  protected PersonSchema()
+  public PersonSchema()
     {
     super( Protocol.HDFS );
 
     addSchemeFor( Format.TSV, new TextDelimited( FIELDS, "\t" ) );
-    addSchemeFor( Format.CSV, new TextDelimited( FIELDS, true, ",", "\"" ) );
+    addSchemeFor( Format.CSV_HEADERS, new TextDelimited( FIELDS, true, ",", "\"" ) );
+    addSchemeFor( Format.CSV, new TextDelimited( FIELDS, ",", "\"" ) );
     addSchemeFor( Format.Native, new SequenceFile( FIELDS ) );
 
     addSchemeFor( Protocol.JDBC, Format.Native, new JDBCScheme( FIELDS ) );

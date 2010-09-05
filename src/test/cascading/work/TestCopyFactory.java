@@ -31,16 +31,16 @@ import cascading.work.factory.FlowFactory;
  * A mock FlowFactory that creates a working Flow for conversion of data between
  * two formats and across multiple protocols.
  */
-public class CopyFactory extends FlowFactory
+public class TestCopyFactory extends FlowFactory
   {
   private String name;
 
-  public CopyFactory( String name )
+  public TestCopyFactory( String name )
     {
     this( null, name );
     }
 
-  public CopyFactory( Properties properties, String name )
+  public TestCopyFactory( Properties properties, String name )
     {
     super( properties );
     this.name = name;

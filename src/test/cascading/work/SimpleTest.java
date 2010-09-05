@@ -21,16 +21,15 @@
 
 package cascading.work;
 
+import cascading.CascadingTestCase;
 import cascading.cascade.Cascade;
 import cascading.flow.Flow;
-import junit.framework.TestCase;
 
 /**
  *
  */
-public class SimpleTest extends TestCase
+public class SimpleTest extends CascadingTestCase
   {
-
   public void testSchema()
     {
     PersonSchema schema = new PersonSchema();
@@ -73,7 +72,7 @@ public class SimpleTest extends TestCase
     // will insert a copy flow if more than one other flow-factory is reading
     // from the same remote source, then update the dependent factories
     // with the new location
-    CacheResourcesFactory resourcesFactory = new CacheResourcesFactory( "copy" );
+    TestCacheFactory resourcesFactory = new TestCacheFactory( "copy" );
     resourcesFactory.setSource( "some/remote/path" );
     resourcesFactory.setSink( "some/local/path" );
 

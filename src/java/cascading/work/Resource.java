@@ -37,6 +37,10 @@ public class Resource<P, F, M>
   private F format;
   private M mode;
 
+  protected Resource()
+    {
+    }
+
   public Resource( String identifier, P protocol, F format, M mode )
     {
     this.identifier = identifier;

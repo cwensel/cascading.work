@@ -29,17 +29,17 @@ import cascading.work.factory.CascadeFactory;
 import cascading.work.factory.ProcessFactory;
 
 /** A mock FlowFactory that creates copies a from from one location to another. */
-public class CacheResourcesFactory extends CascadeFactory
+public class TestCacheFactory extends CascadeFactory
   {
   private String sourceString;
   private String sinkString;
 
-  public CacheResourcesFactory( String name )
+  public TestCacheFactory( String name )
     {
     this( null, name );
     }
 
-  public CacheResourcesFactory( Properties properties, String name )
+  public TestCacheFactory( Properties properties, String name )
     {
     super( properties, name );
     }
@@ -68,7 +68,7 @@ public class CacheResourcesFactory extends CascadeFactory
 
       ConversionResource cachedResource = new ConversionResource( sinkString, resource.getProtocol(), resource.getFormat(), resource.getMode() );
 
-      CopyFactory cache = new CopyFactory( getProperties(), getName() + "-" + resource );
+      TestCopyFactory cache = new TestCopyFactory( getProperties(), getName() + "-" + resource );
 
       cache.addSourceResource( resource );
       cache.addSinkResource( cachedResource );

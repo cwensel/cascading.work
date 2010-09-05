@@ -36,6 +36,9 @@ import cascading.tap.Tap;
  */
 public abstract class TapResource<P, F> extends Resource<P, F, SinkMode>
   {
+  protected TapResource()
+    {
+    }
 
   public TapResource( String path, P protocol, F format, SinkMode mode )
     {

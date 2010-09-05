@@ -69,6 +69,12 @@ public abstract class ProcessFactory<P, R extends TapResource> extends Factory<P
    */
   protected void setSourceSchema( String sourceName, Schema schema )
     {
+    if( sourceName == null || sourceName.isEmpty() )
+      throw new IllegalArgumentException( "sourceName may not be null or empty" );
+
+    if( schema == null )
+      throw new IllegalArgumentException( "schema may not be null" );
+
     sourceSchemas.put( sourceName, schema );
     }
 
@@ -87,6 +93,12 @@ public abstract class ProcessFactory<P, R extends TapResource> extends Factory<P
    */
   protected void setSinkSchema( String sinkName, Schema schema )
     {
+    if( sinkName == null || sinkName.isEmpty() )
+      throw new IllegalArgumentException( "sinkName may not be null or empty" );
+
+    if( schema == null )
+      throw new IllegalArgumentException( "schema may not be null" );
+
     sinkSchemas.put( sinkName, schema );
     }
 
@@ -106,7 +118,7 @@ public abstract class ProcessFactory<P, R extends TapResource> extends Factory<P
    * @param sourceName
    * @param resources
    */
-  public void addSourceResource( String sourceName, R... resources )
+  protected void addSourceResource( String sourceName, R... resources )
     {
     if( resources == null || resources.length == 0 )
       return;
@@ -165,6 +177,11 @@ public abstract class ProcessFactory<P, R extends TapResource> extends Factory<P
     sourceResources.clear();
     }
 
+  public Schema getSourceSchemaFor( TapResource resource )
+    {
+    return getSchemaFor( resource, sourceResources, sourceSchemas );
+    }
+
   /**
    * Method addSinkResource binds a name to the given resources.
    * <p/>
@@ -176,7 +193,7 @@ public abstract class ProcessFactory<P, R extends TapResource> extends Factory<P
    * @param sinkName
    * @param resources
    */
-  public void addSinkResource( String sinkName, R... resources )
+  protected void addSinkResource( String sinkName, R... resources )
     {
     if( resources == null || resources.length == 0 )
       return;
@@ -251,6 +268,30 @@ public abstract class ProcessFactory<P, R extends TapResource> extends Factory<P
       }
 
     return found;
+    }
+
+  public Schema getSinkSchemaFor( TapResource resource )
+    {
+    return getSchemaFor( resource, sinkResources, sinkSchemas );
+    }
+
+  private Schema getSchemaFor( TapResource resource, Map<String, List<R>> resources, Map<String, Schema> schemas )
+    {
+    String name = null;
+
+    for( Map.Entry<String, List<R>> entry : resources.entrySet() )
+      {
+      if( !entry.getValue().contains( resource ) )
+        continue;
+
+      name = entry.getKey();
+      break;
+      }
+
+    if( name == null )
+      return null;
+
+    return schemas.get( name );
     }
 
   protected Collection<String> getSourceNames()

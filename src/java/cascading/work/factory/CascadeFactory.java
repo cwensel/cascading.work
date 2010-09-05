@@ -87,6 +87,17 @@ public class CascadeFactory<R extends TapResource> extends Factory<Cascade>
     processFactories.add( processFactory );
     }
 
+  protected Collection<R> getAllResources()
+    {
+    initResourceGraph();
+
+    Set<R> resources = new HashSet<R>();
+
+    resources.addAll( resourceGraph.vertexSet() );
+
+    return resources;
+    }
+
   protected Collection<R> getResourcesWith( String identifier )
     {
     initResourceGraph();
@@ -110,6 +121,19 @@ public class CascadeFactory<R extends TapResource> extends Factory<Cascade>
     Set<ProcessFactoryHolder> outgoing = resourceGraph.outgoingEdgesOf( sourceResource );
 
     for( ProcessFactoryHolder processFactoryHolder : outgoing )
+      factories.add( processFactoryHolder.processFactory );
+
+    return factories;
+    }
+
+  protected Collection<ProcessFactory> getSinkDependenciesOn( R sourceResource )
+    {
+    initResourceGraph();
+
+    Set<ProcessFactory> factories = new HashSet<ProcessFactory>();
+    Set<ProcessFactoryHolder> incoming = resourceGraph.incomingEdgesOf( sourceResource );
+
+    for( ProcessFactoryHolder processFactoryHolder : incoming )
       factories.add( processFactoryHolder.processFactory );
 
     return factories;

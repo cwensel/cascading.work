@@ -25,5 +25,5 @@ package cascading.work;
  */
 public enum Format
   {
-    TSV, CSV, JSON, Native
+    TSV, CSV, CSV_HEADERS, JSON, Native
   }
